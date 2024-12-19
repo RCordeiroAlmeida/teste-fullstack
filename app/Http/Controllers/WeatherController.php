@@ -38,7 +38,7 @@ class WeatherController extends Controller
     }
 
     public function clima(Request $request){
-        $weatherData = [
+        $weather = [
             "request" => [
                 "type" => "City",
                 "query" => "Chapeco, Brazil",
@@ -78,7 +78,31 @@ class WeatherController extends Controller
             ]
         ];
 
-        return view('index', ['weather' => $weatherData]);
+        $weatherIcons = [
+            113 => 'sunny.png',         // "Ensolarado"
+            116 => 'partly-cloudy.png', // "Parcialmente Nublado"
+            119 => 'cloudy.png',        // "Nublado"
+            176 => 'rainy.png',         // "Chuva Leve"
+            200 => 'storm.png',         // "Tempestade"
+            227 => 'snow.png',          // "Neve"
+        ];
+
+        $weatherDescription = [
+            113 => 'Ensolarado',         
+            116 => 'Parcialmente Nublado', 
+            119 => 'Nublado',       
+            176 => 'Chuva Leve',        
+            200 => 'Tempestade',
+            227 => 'Neve',          
+        ];
+
+        $currentWeatherCode = $weather['current']['weather_code'];
+        
+        $icon = isset($weatherIcons[$currentWeatherCode]) ? asset('images/weather/'.$weatherIcons[$currentWeatherCode]) : asset('images/weather/default.png');
+
+        $description = isset($weatherDescription[$currentWeatherCode]) ? $weatherDescription[$currentWeatherCode] : 'Desconhecido';
+
+        return view('index', ['weather' => $weather, 'icon' => $icon, 'description' => $description]);
 
     }
 }

@@ -1,1 +1,12 @@
-/* app.css */
+.bookmark-icon {
+    fill: none; /* Nenhum preenchimento inicialmente */
+    stroke: #000; /* Cor do contorno */
+    stroke-width: 2px; /* Largura do contorno */
+    transition: fill 0.3s, stroke 0.3s; /* Transição suave */
+}
+
+/* Estilo para o hover do ícone de bookmark */
+.bookmark-icon:hover {
+    fill: #f39c12; /* Cor de preenchimento do ícone no hover */
+    stroke: #f39c12; /* Cor do contorno no hover */
+}

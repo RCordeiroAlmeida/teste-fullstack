@@ -8,7 +8,9 @@ Route::get('/', function () {
 });
 
 
-// Route::get('/forecast', [WeatherController::class, 'getWeather'])->name('forecast');
-Route::get('/forecast', [WeatherController::class, 'clima'])->name('clima');
+Route::get('/forecast', [WeatherController::class, 'getWeather'])->name('forecast');
+//Route::get('/forecast', [WeatherController::class, 'clima'])->name('clima');  // rota de teste para não utilizar a API
 
-Route::post('/save', [WeatherController::class, 'store'])->name('save');
+Route::get('/saved', [WeatherController::class, 'show'])->name('show');
+
+Route::post('/save', [WeatherController::class, 'save'])->name('save');

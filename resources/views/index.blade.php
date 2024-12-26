@@ -11,7 +11,7 @@
 
 <body>
     <div class="container mt-5">
-        <form action="{{ route('clima') }}" method="GET" class="p-4 shadow rounded">
+        <form action="{{ route('forecast') }}" method="GET" class="p-4 shadow rounded">
             @csrf 
             <div class="row g-3">
                 <!-- Campo para o CEP -->
@@ -34,14 +34,34 @@
         </form> 
 
         <div class="container mt-5">
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+        </div>
+       
+        @if(isset($weather))
+        <div class="container mt-5">
             <div class="p-4 shadow rounded bg-white position-relative">
                 <form action="{{ route('save') }}" method="POST">
                     @csrf
+                    <input type="hidden" name="location_name" value="{{ $weather['location']['name'] }}">
+                    <input type="hidden" name="region" value="{{ $weather['location']['region'] }}">
+                    <input type="hidden" name="country" value="{{ $weather['location']['country'] }}">
+                    <input type="hidden" name="temperature" value="{{ $weather['current']['temperature'] }}">
+                    <input type="hidden" name="description" value="{{ $description }}">
+                    <input type="hidden" name="wind_speed" value="{{ $weather['current']['wind_speed'] }}">
+                    <input type="hidden" name="pressure" value="{{ $weather['current']['pressure'] }}">
+                    <input type="hidden" name="humidity" value="{{ $weather['current']['humidity'] }}">
+                    <input type="hidden" name="visibility" value="{{ $weather['current']['visibility'] }}">
+                    <input type="hidden" name="uv_index" value="{{ $weather['current']['uv_index'] }}">
+                    <input type="hidden" name="feelslike" value="{{ $weather['current']['feelslike'] }}">
                     <!-- Botão no canto superior direito -->
                     <div class="position-absolute top-0 end-0 m-3">
-                        <span class="btn fw-bold text-warning" title="Salvar" onclick="showAlert('Salvar', 'Deseja salvar essa previsão?', 'question')">
+                        <button type="submit" class="btn fw-bold text-warning" title="Salvar">
                             <i data-lucide="bookmark" class="bookmark-icon fs-2 text-warning hover-fill-primary"></i>
-                        </span>
+                        </button>
                     </div>
                 </form>
         
@@ -125,59 +145,15 @@
                 </div>
             </div>
         </div>
+        @endif  
 
+        
         <hr class="mt-5">
         <h2 class="mb-3">Previsões do tempo salvas</h2>
         <p>Nenhuma previsão foi salva</p>
 
-
     </div>
 </body>
 </html>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<script>
-    function showAlert(title, text, icon){
-        Swal.fire({
-            title: title,
-            text: text,
-            icon: icon,
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Sim",
-            cancelButtonText: "Cancelar"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                //logica para salvar
-            }
-        });
-    }
-
-    function saveWeatherForecast() {
-            // Dados que você quer salvar, como a previsão do tempo
-            const weatherData = {
-                temperature: "{{ $weather['current']['temperature'] }}",
-                city: "{{ $weather['location']['name'] }}",
-                country: "{{ $weather['location']['country'] }}",
-                // Adicione mais informações conforme necessário
-            };
-
-            // Usando Axios para enviar os dados para o backend
-            axios.post("{{ route('save') }}", weatherData, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                }
-            })
-            .then(response => {
-                Swal.fire('Salvo!', 'A previsão do tempo foi salva com sucesso.', 'success');
-            })
-            .catch(error => {
-                console.error('Erro ao salvar:', error);
-                Swal.fire('Erro!', 'Ocorreu um erro ao salvar.', 'error');
-            });
-        }
-</script>
 
 
